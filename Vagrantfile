@@ -1,5 +1,5 @@
 N = "9" # Tu número de clase
-iniciales = "jsl"
+iniciales = "jsll"
 
 Vagrant.configure("2") do |config|
 
