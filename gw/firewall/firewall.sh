@@ -21,7 +21,7 @@ iptables -P FORWARD DROP
 ################################
 #   Reglas de proteccion local
 ################################
-
+# 1. Permitir trafico de loopback
 ################################
 #   Reglas de preoteccion de red
 ################################
