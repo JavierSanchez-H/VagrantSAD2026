@@ -59,10 +59,12 @@ iptables -A OUTPUT -o eth3 -s 172.2.9.10 -p tcp --sport 22 -m conntrack --ctstat
 
 #R1. Se debe hacer NAT del trafico saliente
 iptables -t nat -A POSTROUTING -s 172.2.9.0/24 -o eth0 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 172.1.9.0/24 -o eth0 -j MASQUERADE
 
 #R2Permitir acceso desde la WAN a WWW a traves del 80 haciendo part forwarding
-iptables -A FORWARD -i eth0 -o eth2 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i eth2 -o eth0 -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -t nat -A PREROUTING -i eth1 -p tcp --dport 80 -j DNAT --to 172.1.9.3:80
+iptables -A FORWARD -i eth1 -o eth2 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth1 -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 #R3.a.Usuario de lña LAN pueden acceder a internet por 80 y 443
 iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.0/24 -d 172.1.9.3 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
@@ -80,18 +82,17 @@ iptables -A FORWARD -i eth3 -o eth0 -s 172.2.9.0/24 -m conntrack --ctstate NEW,E
 iptables -A FORWARD -i eth0 -o eth3 -d 172.2.9.0/24 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 #R5 pERMITIR SALIR TRAFICO DESDE LA DMZ (SOLO HTTTP/HTTPS/DNS/NTP)
-                        # Permitir tráfico HTTP desde la DMZ
-iptables -A FORWARD -i eth2 -o eth0 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i eth0 -o eth2 -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-                        # Permitir tráfico HTTPS desde la DMZ
-iptables -A FORWARD -i eth2 -o eth0 -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
-iptables -A FORWARD -i eth0 -o eth2 -p tcp --sport 443 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-                        # Permitir consultas DNS desde la DMZ
-iptables -A FORWARD -i eth2 -o eth0 -p udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
-iptables -A FORWARD -i eth0 -o eth2 -p udp --sport 53 -m conntrack --ctstate ESTABLISHED -j ACCEPT
-                        # Permitir tráfico NTP desde la DMZ
-iptables -A FORWARD -i eth2 -o eth0 -p udp --dport 123 -m conntrack --ctstate NEW -j ACCEPT
-iptables -A FORWARD -i eth0 -o eth2 -p udp --sport 123 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth0 -s 172.1.9.0/24 -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth0 -s 172.1.9.0/24 -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth0 -s 172.1.9.0/24 -p udp --dport 123 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth0 -s 172.1.9.0/24 -p udp --dport 53 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+
+iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p tcp --sport 80 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p tcp --sport 443 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p udp --sport 123 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p udp --sport 53 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+
 
 #### Logs para depurar ####
 iptables -A INPUT -j LOG --log-prefix "JSL-INPUT" 
