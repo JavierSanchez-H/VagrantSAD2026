@@ -1,0 +1,7 @@
+dn: ou=ou_usuarios,dc=venezuela,dc=org
+objectClass: organizationalUnit
+ou: ou_usuarios
+
+dn: ou=ou_grupos,dc=venezuela,dc=org
+objectClass: organizationalUnit
+ou: ou_grupos

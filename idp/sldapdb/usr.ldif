@@ -1,0 +1,47 @@
+dn: uid=javier,ou=ou_usuarios,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: javier sanchez
+givenName: Javier
+sn: sanchez
+uid: javier
+uidNumber: 2000
+gidNumber: 10001
+homeDirectory: /home/javier
+loginShell: /bin/bash
+userPassword: {SSHA}P1/7O++4GyQT8QRBGhZ1VmRLUncJSS3P
+mail: javier@venezuela.org
+
+dn: uid=fran,ou=ou_usuarios,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: fran ragusa
+givenName: fran
+sn: ragusa
+uid: fran
+uidNumber: 2001
+gidNumber: 10000
+homeDirectory: /home/fran
+loginShell: /bin/bash
+userPassword: {SSHA}P1/7O++4GyQT8QRBGhZ1VmRLUncJSS3P
+mail: fran@venezuela.org
+
+dn: uid=pablo,ou=ou_usuarios,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: pablo sanchez
+givenName: fran
+sn: pablo
+uid: sanchez
+uidNumber: 2001
+gidNumber: 10001
+homeDirectory: /home/pablo
+loginShell: /bin/bash
+userPassword: {SSHA}P1/7O++4GyQT8QRBGhZ1VmRLUncJSS3P
+mail: pabloesteban@venezuela.org

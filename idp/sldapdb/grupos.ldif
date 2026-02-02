@@ -1,0 +1,9 @@
+dn: cn=protrump,ou=ou_grupos,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixGroup
+gidNumber: 10000
+
+dn: cn=promaduro,ou=ou_grupos,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixGroup
+gidNumber: 10001

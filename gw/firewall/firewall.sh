@@ -92,8 +92,10 @@ iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p tcp --sport 443 -m conntr
 iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p udp --sport 123 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p udp --sport 53 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
+#P4. Permitir trafico a ldap desde dmz
+iptables -A FORWARD -i eth2 -o eth3 -s 172.1.9.0/24 -d 172.2.9.2 -p tcp --dport 389 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
-
+iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.2 -d 172.1.9.0/24 -p tcp --sport 389 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 #### Logs para depurar ####
 iptables -A INPUT -j LOG --log-prefix "JSL-INPUT" 
 iptables -A OUTPUT -j LOG --log-prefix "JSL-OUTPUT"
