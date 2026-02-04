@@ -7,3 +7,4 @@ Thumbs.db
 *.swp
 *~
 .env
+secrets.txt
