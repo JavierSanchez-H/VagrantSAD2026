@@ -1,4 +1,4 @@
-# Proyecto SAD Vagrant Firewall Cortafuegos de Gateway  rama UD5-fw
+# Proyecto SAD Vagrant Autenticación centralizada con OpenLDAP  rama UD4-LDAP
 ```
 set -x
 ```
@@ -234,7 +234,7 @@ slapd slapd/no_configuration boolean false
 slapd slapd/domain string ${DOMAIN}
 slapd slapd/organization string ${ORGANIZACION}
 slapd slapd/purge_database boolean true
-EOF
+EOFimage
 # Instalamos paquetes necesarios para openldap
 apt-get install -y slapd ldap-utils
 apt-get autoremove -y
