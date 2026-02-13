@@ -43,7 +43,10 @@ Vagrant.configure("2") do |config|
     idp.vm.network "private_network", ip: "172.2.#{N}.2", netmask: "255.255.255.0", virtualbox__intnet: "red_lan"
     idp.vm.provision "shell", 
       path: "idp/provision.sh",
-      env: {"LDAP_PASS" => ENV['LDAP_PASS']}
+      env: {
+        "LDAP_PASS" => ENV['LDAP_PASS'],
+        "LDAP_USERNAME" => ENV['LDAP_USERNAME']
+      }
 
     # eliminar default gw en eth0 – red NAT creada por defecto
     idp.vm.provision "shell",

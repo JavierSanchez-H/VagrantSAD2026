@@ -96,6 +96,11 @@ iptables -A FORWARD -i eth0 -o eth2 -d 172.1.9.0/24 -p udp --sport 53 -m conntra
 iptables -A FORWARD -i eth2 -o eth3 -s 172.1.9.0/24 -d 172.2.9.2 -p tcp --dport 389 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
 iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.2 -d 172.1.9.0/24 -p tcp --sport 389 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Regla P6. Permitir acceso de la LAN al squid de la DMZ
+iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.0/24 -d 172.1.9.2 -p tcp --dport 3128 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o eth3 -s 172.1.9.2 -d 172.2.9.0/24 -p tcp --sport 3128 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
 #### Logs para depurar ####
 iptables -A INPUT -j LOG --log-prefix "JSL-INPUT" 
 iptables -A OUTPUT -j LOG --log-prefix "JSL-OUTPUT"
