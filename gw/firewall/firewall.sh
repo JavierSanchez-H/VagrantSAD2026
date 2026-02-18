@@ -126,6 +126,23 @@ iptables -A FORWARD -i eth2 -o eth3 -s 172.1.9.0/24 -d 172.2.9.2 -p tcp --dport 
 
 iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.2 -d 172.1.9.0/24 -p tcp --sport 389 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
+# Regla P4.2.1 Permitir acceso WAN (eth1) a servidor VPN
+iptables -A INPUT -i eth1 -p udp --dport 1194 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth1 -p udp --sport 1194 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Permitir que el openvpn en el DMZ consulte al servidor LDAP
+iptables -A OUTPUT -o eth3 -s 172.2.9.2 -p tcp --dport 389 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A INPUT -i eth3 -s 172.2.9.2 -p tcp --sport 389 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Regla P4.2.2 Permitir acceso de VPN-net a http de la DMZ
+iptables -A FORWARD -i tun0 -s 172.3.9.0/24 -d 172.1.9.3 -p tcp -m multiport --dports 80,443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth2 -o tun0 -s 172.1.9.3 -d 172.3.9.0/24 -p tcp -m multiport --sports 80,443 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Regla P4.2.3 Permitir acceso de tun0-net al servidor LDAP de la DMZ
+iptables -A FORWARD -i tun0 -o eth3 -s 172.3.9.0/24 -d 172.2.9.2 -p tcp --dport 389 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth3 -o tun0 -s 172.2.9.2 -d 172.3.9.0/24 -p tcp --sport 389 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+
 # Regla P6. Permitir acceso de la LAN al squid de la DMZ
 iptables -A FORWARD -i eth3 -o eth2 -s 172.2.9.0/24 -d 172.1.9.2 -p tcp --dport 3128 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 iptables -A FORWARD -i eth2 -o eth3 -s 172.1.9.2 -d 172.2.9.0/24 -p tcp --sport 3128 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT

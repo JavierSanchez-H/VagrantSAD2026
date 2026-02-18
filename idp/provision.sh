@@ -48,6 +48,9 @@ echo "[*] Cargando usuarios..."
 ldapadd -x -D "cn=admin,dc=venezuela,dc=org" -w $LDAP_PASS -f "$DB_DIR/usr.ldif" -c
 echo "[*] Cargando usuarios de proxy ..."
 ldapadd -x -D "cn=admin,dc=venezuela,dc=org" -w $LDAP_PASS -f "$DB_DIR/proxy_users.ldif" -c
+echo "[*] Cargando usuarios de vpn..."
+ldapadd -x -D "cn=admin,dc=venezuela,dc=org" -w $LDAP_PASS -f "$DB_DIR/vpn_user.ldif" -c
+
 
 # Acceso web a través del proxy
 echo "[*] Configurando acceso web a través del proxy"

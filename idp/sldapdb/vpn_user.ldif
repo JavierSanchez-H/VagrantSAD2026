@@ -1,0 +1,8 @@
+# Grupo para los que tienen permiso para acceder por vpn
+dn: cn=vpn_users,ou=ou_grupos,dc=venezuela,dc=org
+objectClass: top
+objectClass: posixGroup
+cn: vpn_users
+gidNumber: 10006
+description: Usuarios con permiso para acceder por openvpn
+memberUid: javier
